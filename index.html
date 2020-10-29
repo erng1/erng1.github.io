@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Zombie Hunter</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+
+    <body>
+        <p id="score">Zombie Kill Count: 0</p>
+        <p id="lastScore"></p>
+        <p id="intro">Click On Him To Start!</p>
+        <img id="zombie" src="images/zombie.png" alt="zombie/explosion" width="125" height="125">
+        <button id="endButton">End Game</button>
+
+        <script>
+            let browserWidth;
+            let browserHeight;
+
+            let zombieWidth = document.getElementById("zombie").width;
+            let zombieHeight = document.getElementById("zombie").height;
+
+            let gameStart = false;
+            let scoreCount = 0;
+
+            let normInterval;
+
+            let audio = new Audio("src/explosion.mp3");
+
+            function browserSizeUpdate() {
+                browserWidth = window.innerWidth ||
+                    document.documentElement.clientWidth ||
+                    document.body.clientWidth;
+
+                browserHeight = window.innerHeight ||
+                    document.documentElement.clientHeight ||
+                    document.body.clientHeight;
+
+                setZombiePos();
+            }
+
+            function setZombiePos() {
+                document.getElementById("zombie").style.left = (browserWidth - zombieWidth) / 2 + "px";
+                document.getElementById("zombie").style.top = (browserHeight - zombieHeight) / 2 + "px";
+            }
+
+            function changeZombiePos() {
+                document.getElementById('zombie').onclick = clickHandler;
+                resetZombieImg();
+                document.getElementById("zombie").style.left = Math.random() * (browserWidth - zombieWidth) + "px";
+                document.getElementById("zombie").style.top = Math.random() * (browserHeight - zombieHeight) + "px";
+            }
+
+            function explodeZombie() {
+                document.getElementById("zombie").src = "images/explosion.gif";
+                audio.play();
+            }
+
+            function resetZombieImg() {
+                document.getElementById("zombie").src = "images/zombie.png";
+            }
+
+            function addScore() {
+                if (gameStart === true) {
+                    scoreCount += 1;
+                    document.getElementById("score").innerHTML = "Zombie Kill Count: " + scoreCount;
+                }
+            }
+
+            function startGame() {
+                document.getElementById("intro").innerHTML = "";
+                document.getElementById("lastScore").innerHTML = "";
+            }
+
+            function clickHandler() {
+                startGame();
+                explodeZombie();
+                
+                clearInterval(normInterval); // reset interval
+                normInterval = setInterval(changeZombiePos, 2000);
+                
+                document.getElementById("zombie").onclick = ""; // make zombie unclickable after being clicked once until it appears again
+                addScore();
+                gameStart = true;
+            }
+
+            function endGame() {
+                clearInterval(normInterval);
+                document.getElementById("lastScore").innerHTML = "Your kill count last game was: " + scoreCount;
+                
+                setZombiePos();
+                resetZombieImg();
+
+                gameStart = false;
+                scoreCount = 0;
+                document.getElementById("score").innerHTML = "Zombie Kill Count: " + scoreCount;
+                document.getElementById("intro").innerHTML = "Click On Him To Start!";
+                document.getElementById("zombie").onclick = clickHandler; // make zombie clickable again
+            }
+
+            browserSizeUpdate(); // set browserWidth and browserHeight
+            window.onresize = browserSizeUpdate; // set new browserWidth and browserHeight on window resize
+
+            setZombiePos();
+            document.getElementById("zombie").onclick = clickHandler;
+            document.getElementById("endButton").onclick = endGame;
+
+        </script>
+        
+    </body>
+</html>

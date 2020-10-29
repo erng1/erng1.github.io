@@ -1,0 +1,33 @@
+html { 
+    background: url(../images/background.png) no-repeat center center fixed;
+  }
+
+#zombie {
+    position: absolute;
+}
+
+#score {
+    text-align: center;
+    margin: 0;
+    font-size: 80px;
+}
+
+#lastScore {
+    position: absolute;
+    left: 42%;
+    font-size: 20px;
+}
+
+#intro {
+    position: absolute;
+    top: 30%;
+    left: 41%;
+    font-size: 30px;
+}
+
+#endButton {
+    position: absolute;
+    left: 45%;
+    bottom: 2%;
+    font-size: 30px;
+}
